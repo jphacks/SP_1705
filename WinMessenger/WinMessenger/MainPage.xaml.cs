@@ -25,16 +25,11 @@ namespace WinMessenger
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private SQLiteConnection db;
-
         public MainPage()
         {
             this.InitializeComponent();
 
-            var path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "Personal.sqlite");//パスの作成
-            db = new SQLiteConnection(new SQLitePlatformWinRT(), path);//やること、保存場所
-            db.CreateTable<DB.ThreadItem>();//スレッドアイテムDB生成
-            list.ItemsSource = db.Table<DB.ThreadItem>();// リストを生成
+            list.ItemsSource = DB.LocalDB.db.Table<DB.ThreadItem>();
         }
 
         private void TextBlock_SelectionChanged(object sender, RoutedEventArgs e)
