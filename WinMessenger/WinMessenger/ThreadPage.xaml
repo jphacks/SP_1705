@@ -8,18 +8,20 @@
     mc:Ignorable="d" FontFamily="Segoe UI">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-       
+
         <ListView x:Name="toke"  HorizontalAlignment="Stretch" Margin="15,40,15,75" Grid.ColumnSpan="2">
 
         </ListView>
+        <TextBlock Margin="140,5,153,0"   Text="スレッド名" TextWrapping="Wrap"  FontSize="17" FontFamily="Segoe UI" Height="31" VerticalAlignment="Top" HorizontalAlignment="Center" Width="67"/>
+        <Button Content="スレッドの分割" HorizontalAlignment="Right" Margin="5,2,5,0" VerticalAlignment="Top"/>
         <TextBox x:Name="textBox"  Margin="5,0,151,15" FontSize="15" Grid.ColumnSpan="2" Height="32" VerticalAlignment="Bottom"/>
         <Button Content="送信" HorizontalAlignment="Right" Margin="0,0,10,15" VerticalAlignment="Bottom" Click="Button_Click" Grid.Column="1" FontFamily="Segoe UI"/>
-        <TextBlock Margin="0,5,0,0"   Text="スレッド名" TextWrapping="Wrap"  FontSize="15" Grid.ColumnSpan="2" FontFamily="Segoe UI" Height="20" VerticalAlignment="Top" HorizontalAlignment="Center" Width="58"/>
         <ComboBox HorizontalAlignment="Right" Margin="0,0,72,15" VerticalAlignment="Bottom" Grid.Column="1" SelectedIndex="0">
             <ComboBoxItem Content="普通"/>
             <ComboBoxItem Content="トーク"/>
             <ComboBoxItem Content="緊急"/>
         </ComboBox>
+
 
 
 
