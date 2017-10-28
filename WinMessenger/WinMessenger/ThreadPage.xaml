@@ -8,9 +8,14 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <ListView x:Name="toke"  HorizontalAlignment="Stretch" Margin="15,15,15,75" VerticalAlignment="Stretch"/>
-        <TextBox x:Name="textBox"  Margin="15,0,79,15" Height="32" VerticalAlignment="Bottom" FontSize="15"/>
-        <Button Content="送信" HorizontalAlignment="Right" Margin="0,0,15,15" VerticalAlignment="Bottom" Click="Button_Click"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="23*"/>
+            <ColumnDefinition Width="22*"/>
+        </Grid.ColumnDefinitions>
+        <ListView x:Name="toke"  HorizontalAlignment="Stretch" Margin="15,40,15,75" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="textBox"  Margin="15,0,79,15" Height="32" VerticalAlignment="Bottom" FontSize="15" Grid.ColumnSpan="2"/>
+        <Button Content="送信" HorizontalAlignment="Right" Margin="0,0,15,15" VerticalAlignment="Bottom" Click="Button_Click" Grid.Column="1" FontFamily="Segoe UI"/>
+        <TextBlock Margin="0,5,0,0"   Text="スレッド名" TextWrapping="Wrap"  FontSize="15" Grid.ColumnSpan="2" FontFamily="Segoe UI" Height="20" VerticalAlignment="Top" HorizontalAlignment="Center" Width="58"/>
 
     </Grid>
 </Page>
