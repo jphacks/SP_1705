@@ -28,20 +28,20 @@ namespace WinMessenger
                 PersistKeyInCsp = true
             };
 
-            var manufacturerData = new BluetoothLEManufacturerData();
-            manufacturerData.CompanyId = 0xFFFE;
+            //var manufacturerData = new BluetoothLEManufacturerData();
+            //manufacturerData.CompanyId = 0xFFFE;
 
-            var writer = new DataWriter();
-            using (var ms = new MemoryStream())
-            {
-                ms.WriteByte(0);
-                var pkey = tempAccount.ExportParameters(false).Modulus;
-                ms.Write(pkey, 0, pkey.Length);
-            }
-            manufacturerData.Data = writer.DetachBuffer();
-            publisher.Advertisement.ManufacturerData.Add(manufacturerData);
+            //var writer = new DataWriter();
+            //using (var ms = new MemoryStream())
+            //{
+            //    ms.WriteByte(0);
+            //    var pkey = tempAccount.ExportParameters(false).Modulus;
+            //    ms.Write(pkey, 0, pkey.Length);
+            //}
+            //manufacturerData.Data = writer.DetachBuffer();
+            //publisher.Advertisement.ManufacturerData.Add(manufacturerData);
 
-            publisher.Start();
+            //publisher.Start();
         }
 
         public static async Task SendMessageAsync(DB.MessageItem item)
