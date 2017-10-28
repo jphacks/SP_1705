@@ -1,4 +1,5 @@
-﻿using SQLite.Net.Attributes;
+﻿using SQLite.Net;
+using SQLite.Net.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace WinMessenger.DB
 {
     public class ThreadItem
     {
+        internal MessageAccount account;
+
         public ThreadItem() { }
         public ThreadItem(string title)
         {
@@ -19,5 +22,19 @@ namespace WinMessenger.DB
         [PrimaryKey]
         public Guid Id { get; set; }
         public string Title { get; set; }
+
+        [Ignore]
+        public IEnumerable<MessageItem> Messages => from item in account.db.Table<MessageItem>() where item.ThreadId == Id select item;
+
+        public void AddMessage(MessageItem item)
+        {
+            account.db.Insert(item);
+        }
+
+        internal ThreadItem SetDB(MessageAccount account)
+        {
+            this.account = account;
+            return this;
+        }
     }
 }
