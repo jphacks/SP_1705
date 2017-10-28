@@ -5,7 +5,10 @@ namespace DMessenger
 {
     public sealed class Message
     {
-        public Message() { }
+        public Message()
+        {
+            MessageId = Guid.NewGuid();
+        }
         public Message(XElement xe)
         {
             foreach (var item in xe.Attributes())

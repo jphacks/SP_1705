@@ -38,6 +38,7 @@ namespace DMessenger
                 }
 
                 // 確認できたので、スレッドに追加
+                value.Thread = this;
                 for (int i = messages.Count - 1; i >= 0; i--)
                 {
                     if (messages[i].UpdateTime < value.UpdateTime)
