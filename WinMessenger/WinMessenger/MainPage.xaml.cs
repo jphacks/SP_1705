@@ -31,10 +31,10 @@ namespace WinMessenger
         {
             this.InitializeComponent();
 
-            var path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "Personal.sqlite");
-            db = new SQLiteConnection(new SQLitePlatformWinRT(), path);
-            db.CreateTable<DB.ThreadItem>();
-            list.ItemsSource = db.Table<DB.ThreadItem>();
+            var path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "Personal.sqlite");//パスの作成
+            db = new SQLiteConnection(new SQLitePlatformWinRT(), path);//やること、保存場所
+            db.CreateTable<DB.ThreadItem>();//スレッドアイテムDB生成
+            list.ItemsSource = db.Table<DB.ThreadItem>();// リストを生成
         }
 
         private void TextBlock_SelectionChanged(object sender, RoutedEventArgs e)
@@ -42,9 +42,16 @@ namespace WinMessenger
 
         }
 
-        private void OnCreateThread(object sender, RoutedEventArgs e)
+        private async void OnCreateThread(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(ThreadPage));
+            var dialog = new CreateThreadDialog();//ダイアログからデータを取得
+            if (await dialog.ShowAsync() != ContentDialogResult.Primary)
+                return;
+
+            var item = new DB.ThreadItem(dialog.ThreadTitle);//コンストラクタ呼び出し
+            db.Insert(item);//DBにインサート
+
+            Frame.Navigate(typeof(ThreadPage), item);
         }
     }
 }

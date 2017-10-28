@@ -23,6 +23,8 @@ namespace WinMessenger
     /// </summary>
     public sealed partial class ThreadPage : Page
     {
+        private DB.ThreadItem thread;
+
         public ThreadPage()
         {
             this.InitializeComponent();
@@ -31,6 +33,8 @@ namespace WinMessenger
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+
+            thread = (DB.ThreadItem)e.Parameter;
 
             var nav = SystemNavigationManager.GetForCurrentView();
             nav.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;

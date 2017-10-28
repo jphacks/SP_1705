@@ -24,6 +24,8 @@ namespace WinMessenger
             this.InitializeComponent();
         }
 
+        public string ThreadTitle { get; set; }
+
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
         }

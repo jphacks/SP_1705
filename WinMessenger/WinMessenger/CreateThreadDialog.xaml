@@ -6,12 +6,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title=""
-    PrimaryButtonText="Button1"
-    SecondaryButtonText="Button2"
+    Title="スレッドの作成"
+    PrimaryButtonText="作成"
+    SecondaryButtonText="キャンセル"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <Grid>
+        <TextBox Text="{x:Bind ThreadTitle,Mode=TwoWay}" VerticalAlignment="Bottom"/>
     </Grid>
 </ContentDialog>
