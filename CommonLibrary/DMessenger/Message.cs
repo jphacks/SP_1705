@@ -69,6 +69,8 @@ namespace DMessenger
 
             return xe;
         }
+
+        public override string ToString() => Value?.Value;
     }
 
     public enum MessagePriority

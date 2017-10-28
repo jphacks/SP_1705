@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,12 +8,24 @@ namespace DMessenger
 {
     public sealed class MessageThread : IReadOnlyList<Message>
     {
+        private static readonly ConcurrentDictionary<Guid, MessageThread> threads = new ConcurrentDictionary<Guid, MessageThread>();
+
         private readonly List<Message> messages = new List<Message>();
+
+        private MessageThread(Guid id)
+        {
+            ThreadId = id;
+        }
 
         public Message this[int index] => messages[index];
 
         public int Count => messages.Count;
         public Guid ThreadId { get; }
+
+        public static MessageThread Get(Guid id)
+        {
+            return threads.GetOrAdd(id, i => new MessageThread(i));
+        }
 
         /// <summary>
         /// 作成または受信したメッセージをスレッドに追加します。

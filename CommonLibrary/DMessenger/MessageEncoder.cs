@@ -9,6 +9,13 @@ namespace DMessenger
 {
     public static class MessageEncoder
     {
+        public static XElement Decode(byte[] data)
+        {
+            using (var ms = new MemoryStream(data))
+            {
+                return Decode(ms);
+            }
+        }
         public static XElement Decode(Stream data)
         {
             var version = data.ReadByte();

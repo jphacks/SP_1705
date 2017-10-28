@@ -11,7 +11,7 @@
         <Button Content="スレッド作成" HorizontalAlignment="Right" Margin="0,14,18,0" VerticalAlignment="Top" Width="92" FontSize="15
                 " Click="OnCreateThread"/>
         <TextBlock Margin="54,12,0,0" Text="スレッド一覧" TextWrapping="Wrap" FontSize="30" SelectionChanged="TextBlock_SelectionChanged" Height="37" VerticalAlignment="Top" FontFamily="Segoe UI" HorizontalAlignment="Left" Width="160"/>
-        <ListView x:Name="list" Margin="15,74,15,15">
+        <ListView x:Name="list" Margin="15,74,15,15" SelectionChanged="list_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid Width="200">

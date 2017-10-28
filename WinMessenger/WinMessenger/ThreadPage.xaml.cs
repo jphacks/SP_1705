@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Xml.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
@@ -24,6 +25,7 @@ namespace WinMessenger
     public sealed partial class ThreadPage : Page
     {
         private DB.ThreadItem thread;
+        private IEnumerable<DMessenger.Message> dbsource;
 
         public ThreadPage()
         {
@@ -35,6 +37,10 @@ namespace WinMessenger
             base.OnNavigatedTo(e);
 
             thread = (DB.ThreadItem)e.Parameter;
+            var thid = thread.Id;
+
+            dbsource = DB.LocalDB.db.Table<DB.MessageItem>().Where(item => item.ThreadId == thid).Select(item => item.Value);
+            toke.ItemsSource = dbsource;
 
             var nav = SystemNavigationManager.GetForCurrentView();
             nav.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
@@ -55,10 +61,18 @@ namespace WinMessenger
             Frame.GoBack();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             var message = textBox.Text;
-            toke.Items.Add(message);
+            var msg = new DMessenger.Message()
+            {
+                Value = new XElement("value", new XText(message)),
+                UpdateTime = DateTime.UtcNow
+            };
+            DMessenger.MessageThread.Get(thread.Id).AddOrUpdate(msg);
+            await MessageAPI.SendMessageAsync(new DB.MessageItem(msg, MessageAPI.tempAccount));
+            toke.ItemsSource = null;
+            toke.ItemsSource = dbsource;
             textBox.Text = "";
         }
     }
