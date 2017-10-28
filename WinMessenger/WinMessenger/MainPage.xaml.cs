@@ -1,4 +1,5 @@
-﻿using SQLite.Net;
+﻿using Microsoft.Toolkit.Uwp.Notifications;
+using SQLite.Net;
 using SQLite.Net.Platform.WinRT;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Notifications;
 
 // 空白ページの項目テンプレートについては、https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x411 を参照してください
 
@@ -30,8 +32,35 @@ namespace WinMessenger
             this.InitializeComponent();
 
             list.ItemsSource = DB.LocalDB.db.Table<DB.ThreadItem>();
-        }
 
+            var toastContent = new ToastContent()
+            {
+                Visual = new ToastVisual()
+                {
+                    BindingGeneric = new ToastBindingGeneric()
+                    {
+                        Children =
+            {
+                new AdaptiveText()
+                {
+                    Text = "スレッド名"
+                },
+                new AdaptiveText()
+                {
+                    Text = "メッセージの本文"
+                }
+            }
+                    }
+                }
+            };
+
+            // Create the toast notification
+            var toastNotif = new ToastNotification(toastContent.GetXml());
+
+            // And send the notification
+            ToastNotificationManager.CreateToastNotifier().Show(toastNotif);
+        }
+        
         private void TextBlock_SelectionChanged(object sender, RoutedEventArgs e)
         {
 
