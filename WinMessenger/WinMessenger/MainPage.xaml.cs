@@ -1,10 +1,13 @@
-﻿using System;
+﻿using SQLite.Net;
+using SQLite.Net.Platform.WinRT;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,11 +25,16 @@ namespace WinMessenger
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private SQLiteConnection db;
+
         public MainPage()
         {
             this.InitializeComponent();
 
-            list.ItemsSource = new String[] { "テスト", "tesuto", "tes","a","b","c","v","t","u" };
+            var path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "Personal.sqlite");
+            db = new SQLiteConnection(new SQLitePlatformWinRT(), path);
+            db.CreateTable<DB.ThreadItem>();
+            list.ItemsSource = db.Table<DB.ThreadItem>();
         }
 
         private void TextBlock_SelectionChanged(object sender, RoutedEventArgs e)

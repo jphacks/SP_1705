@@ -15,8 +15,8 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid Width="200">
-                        <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
-                        <Button Content="..." HorizontalAlignment="Right" VerticalAlignment="Center"></Button>
+                        <TextBlock Text="{Binding Title}" VerticalAlignment="Center"/>
+                        <Button Content="..." HorizontalAlignment="Right" VerticalAlignment="Center"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
