@@ -77,5 +77,13 @@ namespace WinMessenger
 
             Frame.Navigate(typeof(ThreadPage), item);
         }
+
+        private void list_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (list.SelectedItem is DB.ThreadItem thread)
+            {
+                Frame.Navigate(typeof(ThreadPage), thread);
+            }
+        }
     }
 }
