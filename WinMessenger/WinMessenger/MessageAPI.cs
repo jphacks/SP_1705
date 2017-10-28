@@ -32,11 +32,11 @@ namespace WinMessenger
             manufacturerData.CompanyId = 0xFFFE;
 
             var writer = new DataWriter();
-            using (var ms = new MemoryStream())
+            writer.WriteString("DMA");
+            writer.WriteByte(0);
+            using (var sha = SHA256.Create())
             {
-                ms.WriteByte(0);
-                var pkey = tempAccount.ExportParameters(false).Modulus;
-                ms.Write(pkey, 0, pkey.Length);
+                writer.WriteBytes(sha.ComputeHash(tempAccount.ExportParameters(false).Modulus).Take(16).ToArray());
             }
             manufacturerData.Data = writer.DetachBuffer();
             publisher.Advertisement.ManufacturerData.Add(manufacturerData);
