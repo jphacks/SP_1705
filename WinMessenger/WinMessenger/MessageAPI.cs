@@ -7,6 +7,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Windows.Devices.Bluetooth.Advertisement;
+using Windows.Storage.Streams;
 
 namespace WinMessenger
 {
@@ -14,6 +16,7 @@ namespace WinMessenger
     {
         public static RSACryptoServiceProvider tempAccount;
         private static ConcurrentDictionary<DB.MessageItem, byte[]> queue = new ConcurrentDictionary<DB.MessageItem, byte[]>();
+        private static BluetoothLEAdvertisementPublisher publisher = new BluetoothLEAdvertisementPublisher();
 
         static MessageAPI()
         {
@@ -24,6 +27,21 @@ namespace WinMessenger
             {
                 PersistKeyInCsp = true
             };
+
+            var manufacturerData = new BluetoothLEManufacturerData();
+            manufacturerData.CompanyId = 0xFFFE;
+
+            var writer = new DataWriter();
+            using (var ms = new MemoryStream())
+            {
+                ms.WriteByte(0);
+                var pkey = tempAccount.ExportParameters(false).Modulus;
+                ms.Write(pkey, 0, pkey.Length);
+            }
+            manufacturerData.Data = writer.DetachBuffer();
+            publisher.Advertisement.ManufacturerData.Add(manufacturerData);
+
+            publisher.Start();
         }
 
         public static async Task SendMessageAsync(DB.MessageItem item)
