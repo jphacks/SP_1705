@@ -98,6 +98,7 @@
     <Compile Include="CreateThreadDialog.xaml.cs">
       <DependentUpon>CreateThreadDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DB\LocalDB.cs" />
     <Compile Include="DB\MessageItem.cs" />
     <Compile Include="DB\ThreadItem.cs" />
     <Compile Include="MainPage.xaml.cs">

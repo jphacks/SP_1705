@@ -25,16 +25,11 @@ namespace WinMessenger
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private SQLiteConnection db;
-
         public MainPage()
         {
             this.InitializeComponent();
 
-            var path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "Personal.sqlite");
-            db = new SQLiteConnection(new SQLitePlatformWinRT(), path);
-            db.CreateTable<DB.ThreadItem>();
-            list.ItemsSource = db.Table<DB.ThreadItem>();
+            list.ItemsSource = DB.LocalDB.db.Table<DB.ThreadItem>();
         }
 
         private void TextBlock_SelectionChanged(object sender, RoutedEventArgs e)
