@@ -5,6 +5,32 @@ namespace DMessenger
 {
     public sealed class Message
     {
+        public Message() { }
+        public Message(XElement xe)
+        {
+            foreach (var item in xe.Attributes())
+            {
+                switch (item.Name.ToString())
+                {
+                    case "deleted":
+                        IsDeleted = true;
+                        break;
+                    case "id":
+                        MessageId = Guid.Parse(item.Value);
+                        break;
+                    case "priority":
+                        Priority = (MessagePriority)Enum.Parse(typeof(MessagePriority), item.Value);
+                        break;
+                    case "update":
+                        UpdateTime = DateTime.Parse(item.Value);
+                        break;
+                }
+            }
+
+            if (!IsDeleted)
+                Value = new XElement(xe.Element("value"));
+        }
+
         public bool IsDeleted { get; private set; }
         public MessageThread Thread { get; internal set; }
         public Guid MessageId { get; }
