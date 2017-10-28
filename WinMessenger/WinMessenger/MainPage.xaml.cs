@@ -44,7 +44,7 @@ namespace WinMessenger
                 return;
 
             var item = new DB.ThreadItem(dialog.ThreadTitle);//コンストラクタ呼び出し
-            db.Insert(item);//DBにインサート
+            DB.LocalDB.db.Insert(item);//DBにインサート
 
             Frame.Navigate(typeof(ThreadPage), item);
         }
