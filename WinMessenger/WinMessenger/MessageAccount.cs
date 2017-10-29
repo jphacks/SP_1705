@@ -50,30 +50,30 @@ namespace WinMessenger
         public static IEnumerable<Guid> AccountIds => from info in users.Table<DB.AccountInfo>() select info.Id;
 
         public byte[] PublicKey { get; }
-        public IEnumerable<DB.ThreadItem> Threads
-        {
-            get
-            {
-                var ids = new HashSet<Guid>();
-                foreach (var thid in (from msg in db.Table<DB.MessageItem>() select msg.ThreadId))
-                {
-                    if (!ids.Add(thid))
-                        continue;
+        public IEnumerable<DB.ThreadItem> Threads => db.Table<DB.ThreadItem>();
+        //{
+        //    get
+        //    {
+        //        var ids = new HashSet<Guid>();
+        //        foreach (var thid in (from msg in db.Table<DB.MessageItem>() select msg.ThreadId))
+        //        {
+        //            if (!ids.Add(thid))
+        //                continue;
 
-                    var thread = (from th in db.Table<DB.ThreadItem>() where th.Id == thid select th).FirstOrDefault();
-                    if (thread is null)
-                    {
-                        thread = new DB.ThreadItem()
-                        {
-                            Id = thid,
-                            Title = "<不明なスレッド>"
-                        };
-                        db.Insert(thread);
-                    }
-                    yield return thread;
-                }
-            }
-        }
+        //            var thread = (from th in db.Table<DB.ThreadItem>() where th.Id == thid select th).FirstOrDefault();
+        //            if (thread is null)
+        //            {
+        //                thread = new DB.ThreadItem()
+        //                {
+        //                    Id = thid,
+        //                    Title = "<不明なスレッド>"
+        //                };
+        //                db.Insert(thread);
+        //            }
+        //            yield return thread;
+        //        }
+        //    }
+        //}
 
         public static MessageAccount Get(Guid id)
         {
@@ -103,7 +103,7 @@ namespace WinMessenger
             if (GetMessages().All(it => it.Id != msgid))
             {
                 db.Insert(new DB.MessageItem(msgid, msg.Thread.ThreadId, bin));
-                if (!db.Table<DB.ThreadItem>().All(th => th.Id == msg.Thread.ThreadId))
+                if (!db.Table<DB.ThreadItem>().Any(th => th.Id == msg.Thread.ThreadId))
                     db.Insert(new DB.ThreadItem() { Id = msg.Thread.ThreadId, Title = msg.Thread.Title });
                 db.Commit();
             }

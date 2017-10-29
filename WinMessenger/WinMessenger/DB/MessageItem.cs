@@ -7,6 +7,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 namespace WinMessenger.DB
 {
@@ -34,6 +36,7 @@ namespace WinMessenger.DB
         public Guid ThreadId { get; set; }
         public byte[] Binary { get; set; }
         public MessageStatus Status { get; set; }
+        public Brush BackColor => Value.Priority == MessagePriority.Emergency ? new SolidColorBrush(Colors.Orange) : new SolidColorBrush(Colors.Transparent);
 
         [Ignore]
         public Message Value => message.Value;

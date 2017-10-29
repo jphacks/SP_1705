@@ -35,13 +35,14 @@ namespace WinMessenger
     {
         private static MessageTransfer transfer;
 
-        private MessageAccount account;
+        private static MessageAccount account;
 
         public MainPage()
         {
             this.InitializeComponent();
 
-            account = MessageAccount.Get(Guid.Parse("0CCC09A6-BB68-4155-9844-B690222E3E79")); // テスト用アカウント
+            if (account == null)
+                account = MessageAccount.Get(Guid.Parse("0CCC09A6-BB68-4155-9844-B690222E3E79")); // テスト用アカウント
             list.ItemsSource = account.Threads;
 
             if (transfer is null)
@@ -83,7 +84,7 @@ namespace WinMessenger
             var item = new DB.ThreadItem(dialog.ThreadTitle);//コンストラクタ呼び出し
             account.AddThread(item);//DBにインサート
 
-            Frame.Navigate(typeof(ThreadPage), item);
+            Frame.Navigate(typeof(ThreadPage), (account, item));
         }
 
         private void list_SelectionChanged(object sender, SelectionChangedEventArgs e)

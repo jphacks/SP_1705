@@ -57,6 +57,7 @@ namespace WinMessenger
         private void Nav_BackRequested(object sender, BackRequestedEventArgs e)
         {
             Frame.GoBack();
+            e.Handled = true;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -67,6 +68,15 @@ namespace WinMessenger
                 Value = new XElement("value", new XText(message)),
                 UpdateTime = DateTime.UtcNow
             };
+            switch (priority.SelectedIndex)
+            {
+                case 1:
+                    msg.Priority = DMessenger.MessagePriority.Talk;
+                    break;
+                case 2:
+                    msg.Priority = DMessenger.MessagePriority.Emergency;
+                    break;
+            }
             DMessenger.MessageThread.Get(thread.Item2.Id, thread.Item2.Title).AddOrUpdate(msg);
             thread.Item1.AddMessage(msg);
             toke.ItemsSource = null;
