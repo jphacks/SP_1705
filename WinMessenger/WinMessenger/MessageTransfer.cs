@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Sockets;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,6 +77,38 @@ namespace WinMessenger
 
             deviceWatcher.Added += OnAddDevice;
             deviceWatcher.Start();
+
+            MessageBroadcast();
+
+            var udp = new UdpClient(24680);
+            while (true)
+            {
+                var ures = await udp.ReceiveAsync();
+                try
+                {
+                    var xml = DMessenger.MessageEncoder.Decode(ures.Buffer);
+                    var msg = new DMessenger.Message(xml);
+
+                }
+                catch (Exception) { }
+            }
+        }
+
+        private async void MessageBroadcast()
+        {
+            using (var client = new UdpClient())
+            {
+                client.EnableBroadcast = true;
+                client.Connect(System.Net.IPAddress.Broadcast, 24680);
+                while (true)
+                {
+                    foreach (var item in queue)
+                    {
+                        await client.SendAsync(item, item.Length);
+                        await Task.Delay(1000);
+                    }
+                }
+            }
         }
 
         private async void OnAddDevice(DeviceWatcher sender, DeviceInformation args)
@@ -83,7 +116,6 @@ namespace WinMessenger
             if (queue.IsEmpty)
                 return;
 
-            Debug.WriteLine("Device Found: " + args.Id);
             using (var bluetoothLeDevice = await BluetoothLEDevice.FromIdAsync(args.Id))
             {
                 var services = await bluetoothLeDevice.GetGattServicesAsync();
@@ -91,6 +123,7 @@ namespace WinMessenger
                     return;
                 foreach (var svc in services.Services)
                 {
+                    Debug.WriteLine("Device Found: " + svc.Uuid);
                     if (svc.Uuid != ServiceId)
                         continue;
 
