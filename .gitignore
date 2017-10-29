@@ -1,0 +1,5 @@
+*.cache
+*bin
+*obj
+*.vs
+*.csproj.user
