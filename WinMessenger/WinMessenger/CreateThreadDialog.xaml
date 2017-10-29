@@ -13,6 +13,6 @@
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <Grid>
-        <TextBox Text="{x:Bind ThreadTitle,Mode=TwoWay}" VerticalAlignment="Bottom"/>
+        <TextBox PlaceholderText="新規スレッド名" Text="{x:Bind ThreadTitle,Mode=TwoWay}" VerticalAlignment="Bottom"/>
     </Grid>
 </ContentDialog>
