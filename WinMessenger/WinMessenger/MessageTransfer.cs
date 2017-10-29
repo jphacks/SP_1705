@@ -106,6 +106,7 @@ namespace WinMessenger
                     Debug.WriteLine("LAN Broadcast " + item.Length);
                     await Task.Delay(1000);
                 }
+                await Task.Delay(1000);
             }
         }
 

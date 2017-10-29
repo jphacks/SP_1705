@@ -90,7 +90,7 @@ namespace WinMessenger
         {
             if (list.SelectedItem is DB.ThreadItem thread)
             {
-                Frame.Navigate(typeof(ThreadPage), thread);
+                Frame.Navigate(typeof(ThreadPage), (account, thread));
             }
         }
     }

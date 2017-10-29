@@ -10,9 +10,7 @@ namespace WinMessenger.DB
 {
     public class ThreadItem
     {
-        internal MessageAccount account;
-
-        public ThreadItem() { }
+        public ThreadItem() { Id = Guid.NewGuid(); }
         public ThreadItem(string title)
         {
             Id = Guid.NewGuid();
@@ -22,20 +20,5 @@ namespace WinMessenger.DB
         [PrimaryKey]
         public Guid Id { get; set; }
         public string Title { get; set; }
-
-        [Ignore]
-        public IEnumerable<MessageItem> Messages => from item in account.db.Table<MessageItem>() where item.ThreadId == Id select item;
-
-        public void AddMessage(MessageItem item)
-        {
-            account.db.Insert(item);
-            account.db.Commit();
-        }
-
-        internal ThreadItem SetDB(MessageAccount account)
-        {
-            this.account = account;
-            return this;
-        }
     }
 }

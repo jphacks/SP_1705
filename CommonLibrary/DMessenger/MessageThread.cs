@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Linq;
 
 namespace DMessenger
 {
@@ -21,10 +22,16 @@ namespace DMessenger
 
         public int Count => messages.Count;
         public Guid ThreadId { get; }
+        public string Title { get; set; }
 
-        public static MessageThread Get(Guid id)
+        public static MessageThread Get(Guid id, string title)
         {
-            return threads.GetOrAdd(id, i => new MessageThread(i));
+            return threads.GetOrAdd(id, i => new MessageThread(i) { Title = title });
+        }
+        public static MessageThread Get(XElement xe)
+        {
+            var id = Guid.Parse(xe.Attribute("id")?.Value);
+            return threads.GetOrAdd(id, i => new MessageThread(i) { Title = xe.Attribute("title").Value });
         }
 
         /// <summary>

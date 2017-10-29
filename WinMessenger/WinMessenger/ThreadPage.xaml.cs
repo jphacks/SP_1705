@@ -24,7 +24,7 @@ namespace WinMessenger
     /// </summary>
     public sealed partial class ThreadPage : Page
     {
-        private DB.ThreadItem thread;
+        private (MessageAccount, DB.ThreadItem) thread;
 
         public ThreadPage()
         {
@@ -35,10 +35,10 @@ namespace WinMessenger
         {
             base.OnNavigatedTo(e);
 
-            thread = (DB.ThreadItem)e.Parameter;
-            var thid = thread.Id;
+            thread = ((MessageAccount, DB.ThreadItem))e.Parameter;
+            var thid = thread.Item2.Id;
 
-            toke.ItemsSource = thread.Messages;
+            toke.ItemsSource = thread.Item1.GetMessages(thid);
 
             var nav = SystemNavigationManager.GetForCurrentView();
             nav.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
@@ -67,10 +67,10 @@ namespace WinMessenger
                 Value = new XElement("value", new XText(message)),
                 UpdateTime = DateTime.UtcNow
             };
-            DMessenger.MessageThread.Get(thread.Id).AddOrUpdate(msg);
-            thread.AddMessage(new DB.MessageItem(msg, thread.account.rsa));
+            DMessenger.MessageThread.Get(thread.Item2.Id, thread.Item2.Title).AddOrUpdate(msg);
+            thread.Item1.AddMessage(msg);
             toke.ItemsSource = null;
-            toke.ItemsSource = thread.Messages;
+            toke.ItemsSource = thread.Item1.GetMessages(thread.Item2.Id);
             textBox.Text = "";
         }
     }

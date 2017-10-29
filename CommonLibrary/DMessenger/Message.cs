@@ -11,6 +11,11 @@ namespace DMessenger
         }
         public Message(XElement xe)
         {
+            var thread = xe.Element("thread");
+            if (thread is null)
+                throw new FormatException();
+            MessageThread.Get(thread).AddOrUpdate(this);
+
             foreach (var item in xe.Attributes())
             {
                 switch (item.Name.ToString())
@@ -26,9 +31,6 @@ namespace DMessenger
                         break;
                     case "update":
                         UpdateTime = DateTime.Parse(item.Value);
-                        break;
-                    case "thread":
-                        MessageThread.Get(Guid.Parse(item.Value)).AddOrUpdate(this);
                         break;
                 }
             }
@@ -57,7 +59,12 @@ namespace DMessenger
             xe.SetAttributeValue("id", MessageId.ToString("N")); // メッセージID
             xe.SetAttributeValue("update", UpdateTime); // 更新日時
             if (Thread != null)
-                xe.SetAttributeValue("thread", Thread.ThreadId);
+            {
+                var thxe = new XElement("thread");
+                thxe.SetAttributeValue("id", Thread.ThreadId);
+                thxe.SetAttributeValue("title", Thread.Title);
+                xe.Add(thxe);
+            }
 
             if (IsDeleted)
             {
