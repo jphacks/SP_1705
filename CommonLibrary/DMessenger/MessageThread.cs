@@ -1,18 +1,38 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Linq;
 
 namespace DMessenger
 {
     public sealed class MessageThread : IReadOnlyList<Message>
     {
+        private static readonly ConcurrentDictionary<Guid, MessageThread> threads = new ConcurrentDictionary<Guid, MessageThread>();
+
         private readonly List<Message> messages = new List<Message>();
+
+        private MessageThread(Guid id)
+        {
+            ThreadId = id;
+        }
 
         public Message this[int index] => messages[index];
 
         public int Count => messages.Count;
         public Guid ThreadId { get; }
+        public string Title { get; set; }
+
+        public static MessageThread Get(Guid id, string title)
+        {
+            return threads.GetOrAdd(id, i => new MessageThread(i) { Title = title });
+        }
+        public static MessageThread Get(XElement xe)
+        {
+            var id = Guid.Parse(xe.Attribute("id")?.Value);
+            return threads.GetOrAdd(id, i => new MessageThread(i) { Title = xe.Attribute("title").Value });
+        }
 
         /// <summary>
         /// 作成または受信したメッセージをスレッドに追加します。

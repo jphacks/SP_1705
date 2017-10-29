@@ -1,0 +1,18 @@
+﻿<ContentDialog
+    x:Class="WinMessenger.CreateThreadDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinMessenger"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="スレッドの作成"
+    PrimaryButtonText="作成"
+    SecondaryButtonText="キャンセル"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+
+    <Grid>
+        <TextBox PlaceholderText="新規スレッド名" Text="{x:Bind ThreadTitle,Mode=TwoWay}" VerticalAlignment="Bottom"/>
+    </Grid>
+</ContentDialog>
