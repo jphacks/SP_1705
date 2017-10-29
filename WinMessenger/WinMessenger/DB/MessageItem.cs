@@ -18,6 +18,12 @@ namespace WinMessenger.DB
         {
             message = new Lazy<Message>(() => new Message(MessageEncoder.Decode(Binary)));
         }
+        public MessageItem(Guid msgid, Guid thid, byte[] bin)
+        {
+            Id = msgid;
+            ThreadId = thid;
+            Binary = bin;
+        }
         public MessageItem(Message value, RSA key)
         {
             SetValue(value, key);

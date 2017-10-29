@@ -27,6 +27,9 @@ namespace DMessenger
                     case "update":
                         UpdateTime = DateTime.Parse(item.Value);
                         break;
+                    case "thread":
+                        MessageThread.Get(Guid.Parse(item.Value)).AddOrUpdate(this);
+                        break;
                 }
             }
 

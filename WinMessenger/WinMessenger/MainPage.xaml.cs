@@ -45,7 +45,7 @@ namespace WinMessenger
             list.ItemsSource = account.Threads;
 
             if (transfer is null)
-                transfer = new MessageTransfer(account.GetMessages());
+                transfer = new MessageTransfer(account);
 
             var toastContent = new ToastContent()
             {

@@ -29,6 +29,7 @@ namespace WinMessenger.DB
         public void AddMessage(MessageItem item)
         {
             account.db.Insert(item);
+            account.db.Commit();
         }
 
         internal ThreadItem SetDB(MessageAccount account)

@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
@@ -24,9 +25,9 @@ namespace WinMessenger
 
         private readonly ConcurrentBag<byte[]> queue = new ConcurrentBag<byte[]>();
 
-        public MessageTransfer(IEnumerable<DB.MessageItem> messages)
+        public MessageTransfer(MessageAccount account)
         {
-            Init(messages);
+            Init(account);
             Instance = this;
         }
 
@@ -35,9 +36,9 @@ namespace WinMessenger
             queue.Add(dat);
         }
 
-        private async void Init(IEnumerable<DB.MessageItem> messages)
+        private async void Init(MessageAccount account)
         {
-            foreach (var msg in messages)
+            foreach (var msg in account.GetMessages())
             {
                 queue.Add(msg.Binary);
             }
@@ -78,35 +79,32 @@ namespace WinMessenger
             deviceWatcher.Added += OnAddDevice;
             deviceWatcher.Start();
 
-            MessageBroadcast();
+            var udp = new UdpClient(AddressFamily.InterNetworkV6);
+            udp.EnableBroadcast = true;
+            udp.Client.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, 0);
+            udp.Client.Bind(new IPEndPoint(IPAddress.IPv6Any, 24680));
+            MessageBroadcast(udp);
 
-            var udp = new UdpClient(24680);
             while (true)
             {
                 var ures = await udp.ReceiveAsync();
                 try
                 {
-                    var xml = DMessenger.MessageEncoder.Decode(ures.Buffer);
-                    var msg = new DMessenger.Message(xml);
-
+                    account.AddMessage(ures.Buffer);
                 }
                 catch (Exception) { }
             }
         }
 
-        private async void MessageBroadcast()
+        private async void MessageBroadcast(UdpClient client)
         {
-            using (var client = new UdpClient())
+            while (true)
             {
-                client.EnableBroadcast = true;
-                client.Connect(System.Net.IPAddress.Broadcast, 24680);
-                while (true)
+                foreach (var item in queue)
                 {
-                    foreach (var item in queue)
-                    {
-                        await client.SendAsync(item, item.Length);
-                        await Task.Delay(1000);
-                    }
+                    await client.SendAsync(item, item.Length, new IPEndPoint(IPAddress.Broadcast, 24680));
+                    Debug.WriteLine("LAN Broadcast " + item.Length);
+                    await Task.Delay(1000);
                 }
             }
         }

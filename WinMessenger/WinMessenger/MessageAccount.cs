@@ -63,6 +63,19 @@ namespace WinMessenger
             item.SetDB(this);
         }
 
+        public void AddMessage(byte[] bin)
+        {
+            var xml = DMessenger.MessageEncoder.Decode(bin);
+            var msg = new DMessenger.Message(xml);
+
+            var msgid = msg.MessageId;
+            if (GetMessages().All(it => it.Id != msgid))
+            {
+                db.Insert(new DB.MessageItem(msgid, msg.Thread.ThreadId, bin));
+                db.Commit();
+            }
+        }
+
         public IEnumerable<DB.MessageItem> GetMessages() => db.Table<DB.MessageItem>();
     }
 }
