@@ -62,5 +62,7 @@ namespace WinMessenger
             db.Insert(item);
             item.SetDB(this);
         }
+
+        public IEnumerable<DB.MessageItem> GetMessages() => db.Table<DB.MessageItem>();
     }
 }

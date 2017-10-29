@@ -33,6 +33,8 @@ namespace WinMessenger
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private static MessageTransfer transfer;
+
         private MessageAccount account;
 
         public MainPage()
@@ -41,6 +43,9 @@ namespace WinMessenger
 
             account = MessageAccount.Get(Guid.Parse("0CCC09A6-BB68-4155-9844-B690222E3E79")); // テスト用アカウント
             list.ItemsSource = account.Threads;
+
+            if (transfer is null)
+                transfer = new MessageTransfer(account.GetMessages());
 
             var toastContent = new ToastContent()
             {
@@ -62,53 +67,6 @@ namespace WinMessenger
                     }
                 }
             };
-
-            CreateGatt();
-        }
-
-        private async void CreateGatt()
-        {
-            GattServiceProviderResult result = await GattServiceProvider.CreateAsync(Guid.Parse("52E7111F-A600-434D-AA23-DFE0107E6522"));
-
-            if (result.Error == BluetoothError.Success)
-            {
-                var serviceProvider = result.ServiceProvider;
-
-                var prm = new GattLocalCharacteristicParameters()
-                {
-                    CharacteristicProperties = GattCharacteristicProperties.Write,
-                    UserDescription = "DMsg"
-                };
-                var characteristicResult = await serviceProvider.Service.CreateCharacteristicAsync(Guid.Parse("4D0C42A1-01D4-46F1-8C32-97AD0F3CBB40"), prm);
-                if (characteristicResult.Error != BluetoothError.Success)
-                {
-                    // An error occurred.
-                    return;
-                }
-                var _readCharacteristic = characteristicResult.Characteristic;
-                _readCharacteristic.WriteRequested += (sender, e) =>
-                {
-
-                };
-
-                var advParameters = new GattServiceProviderAdvertisingParameters
-                {
-                    IsDiscoverable = true,
-                    //IsConnectable = true
-                };
-                serviceProvider.StartAdvertising(advParameters);
-            }
-
-            string[] requestedProperties = { "System.Devices.Aep.DeviceAddress", "System.Devices.Aep.IsConnected" };
-            var deviceWatcher = DeviceInformation.CreateWatcher(BluetoothLEDevice.GetDeviceSelectorFromPairingState(false),
-                    requestedProperties,
-                    DeviceInformationKind.AssociationEndpoint);
-
-            deviceWatcher.Added += (sender, e) =>
-            {
-
-            };
-            deviceWatcher.Start();
         }
 
         private void TextBlock_SelectionChanged(object sender, RoutedEventArgs e)
