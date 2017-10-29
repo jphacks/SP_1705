@@ -1,6 +1,6 @@
 # 分散メッセージングアプリケーション
 
-[![Product Name](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](https://www.youtube.com/channel/UC4PtjOfZTbVp9DwtJv82Lzg)
+[![Product Name](thum.png)](https://www.youtube.com/watch?v=JkYPZfHp_ig)
 
 ## 製品概要
 ### Communicate Tech
